@@ -1,0 +1,6 @@
+@RouteManagementTutorial_HostAddress = http://localhost:5241
+
+GET {{RouteManagementTutorial_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
