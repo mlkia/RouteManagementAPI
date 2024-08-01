@@ -12,8 +12,8 @@ namespace RouteManagementTutorial.Entities
 
         [BsonElement("DriverName")]
         public string Name { get; set; } = null!;
-        public int PersonNumber { get; set; }
-        public int   PhoneNumber { get; set; } 
+        public string PersonNumber { get; set; } = null!; 
+        public string PhoneNumber { get; set; } = null!; 
         public string Email { get; set; } = null!;
         public string LicenseType { get; set; } = null!;
     }
