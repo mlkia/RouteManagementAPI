@@ -14,9 +14,7 @@ namespace Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-
-        [BsonElement("OrderName")]
-       public List<Customer> customer { get; set; } = null!;
+        public List<Customer> customer { get; set; } = null!;
         public string OrderDetails { get; set; } = null!;
     }
 } 
