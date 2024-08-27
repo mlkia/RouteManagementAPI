@@ -1,4 +1,4 @@
-﻿ using RouteManagementTutorial.Entities;
+﻿using RouteManagementTutorial.Entities;
 using RouteManagementTutorial.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,10 +52,10 @@ namespace RouteManagementTutorial.Controllers
 
             if (!result.Success)
             {
-                return BadRequest(result);
+                return BadRequest(ModelState);
             }
             
-            return Ok(result);
+            return Created("https://localhost:7116/api/Drivers"+newDriver.Id, newDriver);
         }
 
 
