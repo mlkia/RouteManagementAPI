@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-    public class Manager
+    public class Admin
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

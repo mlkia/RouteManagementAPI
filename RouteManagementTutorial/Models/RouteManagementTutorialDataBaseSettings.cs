@@ -5,6 +5,6 @@
         public string ConnectionString { get; set; } = null!;
         public string DatabaseName { get; set; } = null!;
         public string DriversCollectionName { get; set; } = null!;
-        public string ManagersCollectionName { get; set; } = null!;
+        public string AdminsCollectionName { get; set; } = null!;
     }
 }
