@@ -9,7 +9,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Entities
 {
-    internal class Order
+    public class Order
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

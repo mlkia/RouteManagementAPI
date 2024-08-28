@@ -33,8 +33,8 @@ namespace RouteManagementTutorial.Services
         public async Task<Admin?> GetAsync(string id) =>
             await _adminsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Admin newBook) =>
-            await _adminsCollection.InsertOneAsync(newBook);
+        public async Task CreateAsync(Admin newAdmin) =>
+            await _adminsCollection.InsertOneAsync(newAdmin);
 
 
         public string? Authenticate(string email, string password)
