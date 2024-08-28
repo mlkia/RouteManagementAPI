@@ -67,7 +67,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 builder.Services.AddSingleton<DriversService>();
-builder.Services.AddSingleton<ManagerService>();
+builder.Services.AddSingleton<AdminService>();
 
 var app = builder.Build();
 

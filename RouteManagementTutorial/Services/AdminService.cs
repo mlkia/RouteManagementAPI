@@ -13,33 +13,33 @@ using System.Text;
 
 namespace RouteManagementTutorial.Services
 {
-    public class ManagerService
+    public class AdminService
     {
-        private readonly IMongoCollection<Manager> _managersCollection;
+        private readonly IMongoCollection<Admin> _adminsCollection;
         private readonly JwtSettings _jwtSettings;
 
-        public ManagerService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings, IOptions<JwtSettings> jwtSettings)
+        public AdminService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings, IOptions<JwtSettings> jwtSettings)
         {
             var mongoclient = new MongoClient(RMTDataBasesettings.Value.ConnectionString);
             var database = mongoclient.GetDatabase(RMTDataBasesettings.Value.DatabaseName);
 
-            _managersCollection = database.GetCollection<Manager>(RMTDataBasesettings.Value.ManagersCollectionName);
+            _adminsCollection = database.GetCollection<Admin>(RMTDataBasesettings.Value.AdminsCollectionName);
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<List<Manager>> GetAsync() => 
-            await _managersCollection.Find(_ => true).ToListAsync();
+        public async Task<List<Admin>> GetAsync() => 
+            await _adminsCollection.Find(_ => true).ToListAsync();
 
-        public async Task<Manager?> GetAsync(string id) =>
-            await _managersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task<Admin?> GetAsync(string id) =>
+            await _adminsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Manager newBook) =>
-            await _managersCollection.InsertOneAsync(newBook);
+        public async Task CreateAsync(Admin newBook) =>
+            await _adminsCollection.InsertOneAsync(newBook);
 
 
         public string? Authenticate(string email, string password)
         {
-            var user = _managersCollection.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
+            var user = _adminsCollection.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
 
             if (user is null)
             {
