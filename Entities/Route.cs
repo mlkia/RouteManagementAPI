@@ -14,8 +14,11 @@ namespace Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string RouteId { get; set; } = null!;
         public string RouteName { get; set; } = null!;
+
+        [BsonRepresentation(BsonType.ObjectId)]
         public string DriverID { get; set; } = null!;
         public string DriverName { get; set; } = null!;
+
         //public List<Order> Orders { get; set; } = null!; //List of orders objects I'll get this latre from another orders API. 
 
     }
