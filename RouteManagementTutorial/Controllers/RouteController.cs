@@ -24,6 +24,7 @@ namespace RouteManagementTutorial.Controllers
         public async Task<ActionResult<Route>> Get(string id)
         {
             var route = await _routeService.GetAsync(id);
+
             if (route is null)
             {
                 return NotFound("Route is not found");
@@ -34,8 +35,13 @@ namespace RouteManagementTutorial.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Route newRoute)
         {
-            await _routeService.CreateAsync(newRoute);
-            return Ok("Success");
+            var routeResult = await _routeService.CreateAsync(newRoute);
+
+            if (!routeResult.Success)
+            {
+                return BadRequest(routeResult.Message);
+            }
+            return Ok(routeResult.Route);
         }
     }
 }
