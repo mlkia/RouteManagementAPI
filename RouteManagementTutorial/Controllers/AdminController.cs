@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RouteManagementTutorial.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class AdminController : ControllerBase
