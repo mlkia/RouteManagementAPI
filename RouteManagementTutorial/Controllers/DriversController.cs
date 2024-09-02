@@ -1,9 +1,11 @@
 ﻿using RouteManagementTutorial.Entities;
 using RouteManagementTutorial.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RouteManagementTutorial.Controllers
 {
+    [Authorize(Roles = "Driver")]
     [ApiController]
     [Route("api/[controller]")]
     public class DriversController : ControllerBase

@@ -52,7 +52,8 @@ namespace RouteManagementTutorial.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim(ClaimTypes.Email, email)
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Role, "Admin")
             }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _jwtSettings.Issuer,
