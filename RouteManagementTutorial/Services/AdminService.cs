@@ -16,15 +16,15 @@ namespace RouteManagementTutorial.Services
     public class AdminService
     {
         private readonly IMongoCollection<Admin> _adminsCollection;
-        private readonly JwtSettings _jwtSettings;
+        private readonly CreateAuthentication _createAythentication;
 
-        public AdminService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings, IOptions<JwtSettings> jwtSettings)
+        public AdminService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings, CreateAuthentication createAythentication)
         {
             var mongoclient = new MongoClient(RMTDataBasesettings.Value.ConnectionString);
             var database = mongoclient.GetDatabase(RMTDataBasesettings.Value.DatabaseName);
 
             _adminsCollection = database.GetCollection<Admin>(RMTDataBasesettings.Value.AdminsCollectionName);
-            _jwtSettings = jwtSettings.Value;
+            _createAythentication = createAythentication;
         }
 
         public async Task<List<Admin>> GetAsync() => 
@@ -37,7 +37,7 @@ namespace RouteManagementTutorial.Services
             await _adminsCollection.InsertOneAsync(newAdmin);
 
 
-        public string? Authenticate(string email, string password)
+        public string? Authenticate(string email, string password, string role)
         {
             var user = _adminsCollection.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
 
@@ -46,22 +46,10 @@ namespace RouteManagementTutorial.Services
                 return null;
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, "Admin")
-            }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = _jwtSettings.Issuer,
-                Audience = _jwtSettings.Audience,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var newAuyhentication = _createAythentication;
+
+            return newAuyhentication.CreateNewAuthen(email, role);
+
         }
 
     }

@@ -25,25 +25,28 @@ namespace RouteManagementTutorial.Controllers
 
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Admin>> Get(string id) 
-            {
-
+        {
             var admin = await _adminService.GetAsync(id);
-                if (admin is null)
-                {
-                    return NotFound("User is not found");
-                }
-                return admin;
+
+            if (admin is null)
+            {
+                return NotFound("User is not found");
             }
+
+             return admin;
+        }
 
         [AllowAnonymous]
         [HttpPost("login")]
 
         public IActionResult Login([FromBody] Admin admin)
         {
+            var token = _adminService.Authenticate(admin.Email, admin.Password, "Admin");
 
-              var token = _adminService.Authenticate(admin.Email, admin.Password);
             if (token == null)
+            {
                 return Unauthorized();
+            }
 
             return Ok(new { Token = token });
         }
@@ -51,7 +54,6 @@ namespace RouteManagementTutorial.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Admin newAdmin)
         {
-
             await _adminService.CreateAsync(newAdmin);
             
             return Ok("Success");

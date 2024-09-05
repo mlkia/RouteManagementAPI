@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RouteManagementTutorial.Controllers
 {
-    [Authorize(Roles = "Driver")]
     [ApiController]
     [Route("api/[controller]")]
     public class DriversController : ControllerBase
@@ -17,6 +16,7 @@ namespace RouteManagementTutorial.Controllers
             _driversService = driversService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<List<Driver>> Get() =>
             await _driversService.GetAsync();
@@ -28,16 +28,32 @@ namespace RouteManagementTutorial.Controllers
         /// <returns>The requested <see cref="Driver"/></returns>
         /// <response code="200">Returns the driver object.</response>
         /// <response code="404">If the driver is not found.</response>
+        [Authorize(Roles = "Driver")]
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Driver>> Get(string id) 
-            {
+        {
             var driver = await _driversService.GetAsync(id);
-                if (driver is null)
-                {
-                    return NotFound("Driver is not found");
-                }
-                return driver;
+
+            if (driver is null)
+            {
+                return NotFound("Driver is not found");
             }
+            return driver;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] Driver driver)
+        {
+            var token = _driversService.Authenticate(driver.Email, driver.PersonNumber, "Driver");
+
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(new { Token = token });
+        }
 
         /// <summary>
         /// Creates a new driver.
@@ -46,6 +62,7 @@ namespace RouteManagementTutorial.Controllers
         /// <returns>The result of the creation operation.</returns>
         /// <response code="200">If the driver is successfully created.</response>
         /// <response code="400">If the creation fails.</response>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Post(Driver newDriver)
         {
@@ -69,6 +86,7 @@ namespace RouteManagementTutorial.Controllers
         /// <returns>An IActionResult indicating the result of the update operation.</returns>
         /// <response code="204">If the driver is successfully updated.</response>
         /// <response code="404">If the driver is not found.</response>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Updat(string id, Driver updatedDriver)
         {
@@ -93,6 +111,7 @@ namespace RouteManagementTutorial.Controllers
         /// <returns>An IActionResult indicating the result of the delete operation.</returns>
         /// <response code="204">If the driver is successfully deleted.</response>
         /// <response code="404">If the driver is not found.</response>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {

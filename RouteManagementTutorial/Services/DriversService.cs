@@ -4,6 +4,7 @@ using RouteManagementTutorial.Models;
 using RouteManagementTutorial.Entities;
 using RouteManagementTutorial.Helper;
 using RouteManagementTutorial.DTO;
+using RouteManagementTutorial.Authenticate;
 
 
 namespace RouteManagementTutorial.Services
@@ -11,13 +12,15 @@ namespace RouteManagementTutorial.Services
     public class DriversService
     {
         private readonly IMongoCollection<Driver> _driversCollection;
+        private readonly CreateAuthentication _createAuthentication;
 
-        public DriversService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings)
+        public DriversService(IOptions<RouteManagementTutorialDataBaseSettings> RMTDataBasesettings,CreateAuthentication createAuthentication)
         {
             var mongoclient = new MongoClient(RMTDataBasesettings.Value.ConnectionString);
             var database = mongoclient.GetDatabase(RMTDataBasesettings.Value.DatabaseName);
 
             _driversCollection = database.GetCollection<Driver>(RMTDataBasesettings.Value.DriversCollectionName);
+            _createAuthentication = createAuthentication;
         }
 
         /// <summary>
@@ -96,7 +99,22 @@ namespace RouteManagementTutorial.Services
             // Return the result of the creation operation
             return driverResult;
         }
-           
+
+        public string? Authenticate(string email, string personNumber, string role)
+        {
+            var driver = _driversCollection.Find(x => x.Email == email && x.PersonNumber == personNumber).FirstOrDefault();
+
+            if (driver is null)
+            {
+                return null;
+            }
+
+            var newAuuhentication = _createAuthentication;
+
+            return newAuuhentication.CreateNewAuthen(email, role);
+
+        }
+
 
         public async Task UpdateAsync(string id, Driver updatedDriver) =>
             await _driversCollection.ReplaceOneAsync(x => x.Id == id, updatedDriver);
