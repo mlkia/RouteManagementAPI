@@ -2,6 +2,7 @@
 using RouteManagementTutorial.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace RouteManagementTutorial.Controllers
 {
@@ -21,23 +22,30 @@ namespace RouteManagementTutorial.Controllers
         public async Task<List<Driver>> Get() =>
             await _driversService.GetAsync();
 
-        /// <summary>
-        /// Retrieves a driver by their unique identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the driver (24 characters long).</param>
-        /// <returns>The requested <see cref="Driver"/></returns>
-        /// <response code="200">Returns the driver object.</response>
-        /// <response code="404">If the driver is not found.</response>
-        [Authorize(Roles = "Driver")]
-        [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<Driver>> Get(string id) 
+
+        [Authorize]
+        [HttpGet("Profile")]
+        public async Task<ActionResult<Driver>> GetOne() 
         {
-            var driver = await _driversService.GetAsync(id);
+            var loggedInEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(loggedInEmail))
+            {
+                return BadRequest();
+            }
+
+            var driver = await _driversService.GetByEmail(loggedInEmail);
 
             if (driver is null)
             {
                 return NotFound("Driver is not found");
             }
+
+            if (loggedInEmail != driver.Email)
+            {
+                return Forbid();
+            }
+
             return driver;
         }
 

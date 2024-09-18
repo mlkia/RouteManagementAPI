@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RouteManagementTutorial.Authenticate;
+using RouteManagementTutorial.Entities;
 using RouteManagementTutorial.Models;
 using RouteManagementTutorial.Services;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,17 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("DriverSelf", policy =>
+        policy.RequireAssertion(context =>
+        {
+            var emailClaim = context.User.FindFirst(ClaimTypes.Email)?.Value;
+            var route = context.Resource as Driver; 
+            return emailClaim == route?.Email;
+        }));
 });
 
 builder.Services.AddControllers();
