@@ -17,7 +17,7 @@ namespace RouteManagementTutorial.Controllers
             _driversService = driversService;
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<List<Driver>> Get() =>
             await _driversService.GetAsync();

@@ -86,6 +86,20 @@ builder.Services.AddSingleton<CreateAuthentication>();
 
 var app = builder.Build();
 
+/// <summary>
+/// Configures Cross-Origin Resource Sharing (CORS) for the application.
+/// This allows external web applications to access the API while ensuring security by restricting origins and request methods.
+/// The configuration allows:
+/// - Any HTTP headers to be sent in the request.
+/// - Requests from the specified origin: "http://localhost:5173" (for the React app).
+/// - Any HTTP methods (GET, POST, PUT, DELETE, etc.) to be used in the request.
+/// 
+/// This is essential for enabling communication between the React frontend and the ASP.NET Web API backend running on different ports.
+/// Remove this before production.
+/// </summary>
+app.UseCors(c => c.AllowAnyHeader().WithOrigins("http://localhost:5173").AllowAnyMethod());
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
