@@ -70,7 +70,7 @@ namespace RouteManagementTutorial.Controllers
         /// <returns>The result of the creation operation.</returns>
         /// <response code="200">If the driver is successfully created.</response>
         /// <response code="400">If the creation fails.</response>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Post(Driver newDriver)
         {
@@ -79,7 +79,7 @@ namespace RouteManagementTutorial.Controllers
 
             if (!result.Success)
             {
-                return BadRequest(ModelState);
+                return BadRequest(newDriver);
             }
             
             return Created("https://localhost:7116/api/Drivers"+newDriver.Id, newDriver);
