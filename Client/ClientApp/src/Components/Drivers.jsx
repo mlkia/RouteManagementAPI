@@ -49,9 +49,16 @@ function Drivers() {
       body: JSON.stringify(newDriver)
     })
 
-    const resultInJson = await result.json
-    console.log(resultInJson)
-    
+
+    if (result.ok){
+      console.log("New Driver is added")
+      let resultInJson = await result.json();
+      console.log(resultInJson);
+    }else{
+      console.log("Driver add failed")
+      let resultInJson = await result.json();
+      console.log(resultInJson);
+    }
   }
   return (
     <div>
