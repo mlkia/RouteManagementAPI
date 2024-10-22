@@ -3,6 +3,7 @@ using RouteManagementTutorial.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using RouteManagementTutorial.DTO;
 
 namespace RouteManagementTutorial.Controllers
 {
@@ -17,7 +18,7 @@ namespace RouteManagementTutorial.Controllers
             _driversService = driversService;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<List<Driver>> Get() =>
             await _driversService.GetAsync();
@@ -51,9 +52,9 @@ namespace RouteManagementTutorial.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] Driver driver)
+        public IActionResult Login([FromBody] UserAuthenticate driver)
         {
-            var token = _driversService.Authenticate(driver.Email, driver.PersonNumber, "Driver");
+            var token = _driversService.Authenticate(driver.Email, driver.Password, "Driver");
 
             if (token == null)
             {
