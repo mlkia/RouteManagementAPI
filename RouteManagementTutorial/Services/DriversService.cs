@@ -63,7 +63,7 @@ namespace RouteManagementTutorial.Services
             var driverResult = new CreateDriverResult();
 
             // Validate the email address
-            var emailValidation = DriverHelper.EmailValidation(newDriver);
+            var emailValidation = DriverHelper.EmailValidation(newDriver.Email);
 
             if (emailValidation)
             {
@@ -73,21 +73,34 @@ namespace RouteManagementTutorial.Services
             // Check if the email address is available
             var emailAvailable = await GetByEmail(newDriver.Email);
 
-            driverResult.EmailAvailable = emailAvailable == null;
+            // If emailAvailable is null, driverResult.EmailAvailable is true, otherwise false.
+            driverResult.EmailAvailable = emailAvailable == null; 
+
+            
 
             // Validate the phone number
-             var phoneNumberValidation = DriverHelper.PhoneNumberValidation(newDriver);
+            var phoneNumberValidation = DriverHelper.PhoneNumberValidation(newDriver.PhoneNumber);
 
             if (phoneNumberValidation)
             {
                 driverResult.PhoneNumberValid = true;
             }
 
+            // Validate the password
+            var passwordValidation = DriverHelper.PasswordValidation(newDriver.Password);
+
+            if (passwordValidation) 
+            {
+                driverResult.PasswordValid = true;
+            }
+
+
             // Check if all validations passed and if the email is available
             if (
                 driverResult.EmailValid && 
                 driverResult.EmailAvailable && 
-                driverResult.PhoneNumberValid
+                driverResult.PhoneNumberValid &&
+                driverResult.PasswordValid
             ) 
             {
                 // Insert the new driver into the collection

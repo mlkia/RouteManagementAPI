@@ -51,8 +51,6 @@ function Login(){
 
               console.log(DriverData);
 
-
-
         }   catch(error){
             setError(error.message);
         }

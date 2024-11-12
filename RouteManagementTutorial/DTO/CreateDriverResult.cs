@@ -5,6 +5,7 @@
         public bool Success { get; set; } = false;
         public bool EmailAvailable { get; set; } = false;
         public bool EmailValid { get; set; } = false!;
+        public bool PasswordValid { get; set; } = false!;
         public bool PhoneNumberValid { get; set; } = false!;
     }
 }
