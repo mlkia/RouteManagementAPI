@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RouteManagementTutorial.DTO;
+using Entities;
 
 namespace RouteManagementTutorial.Controllers
 {
@@ -12,6 +13,8 @@ namespace RouteManagementTutorial.Controllers
     public class DriversController : ControllerBase
     {
         private readonly DriversService _driversService;
+        
+             
 
         public DriversController(DriversService driversService)
         {
@@ -75,12 +78,11 @@ namespace RouteManagementTutorial.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Driver newDriver)
         {
-
             var result = await _driversService.CreateAsync(newDriver);
 
             if (!result.Success)
             {
-                return BadRequest(newDriver);
+                return BadRequest(result);
             }
             
             return Created("https://localhost:7116/api/Drivers"+newDriver.Id, newDriver);
