@@ -11,10 +11,11 @@ namespace RouteManagementTutorial.Entities
         public string? Id { get; set; }
 
         [BsonElement("DriverName")]
-        public string Name { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public string PersonNumber { get; set; } = null!; 
+        public string IdentityNumber { get; set; } = null!; 
         public string PhoneNumber { get; set; } = null!; 
         public string LicenseType { get; set; } = null!;
     }
