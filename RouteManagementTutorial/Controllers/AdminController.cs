@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RouteManagementTutorial.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class AdminController : ControllerBase
@@ -54,9 +54,14 @@ namespace RouteManagementTutorial.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Admin newAdmin)
         {
-            await _adminService.CreateAsync(newAdmin);
-            
-            return Ok("Success");
+            var result = await _adminService.CreateAsync(newAdmin);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Created("https://localhost:7116/api/Admin" + newAdmin.Id, newAdmin);
         }
     }
 }

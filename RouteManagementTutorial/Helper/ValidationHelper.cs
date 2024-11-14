@@ -4,7 +4,7 @@ using ZstdSharp.Unsafe;
 
 namespace RouteManagementTutorial.Helper
 {
-    public class DriverHelper
+    public class ValidationHelper
     {
         /// <summary>
         /// Regular expression pattern for validating a 10-digit phone number.
@@ -14,9 +14,11 @@ namespace RouteManagementTutorial.Helper
         /// </remarks>
         public const string PhoneNumberPattern = @"^([0-9]{10})$"; //or @"^\d{10}$"
 
-        public const string NationalNumberPattern = @"^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$";
+        public const string IdentityNumberPattern = @"^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$";
 
-        public const string PasswordPattern = @"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!#$%&'()*+,-./:;<=>?@[\]^_`{|}~ ]{8,20}$";
+        public const string DriverPasswordPattern = @"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d\W_]{8,20}$";
+
+        public const string AdminPasswordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W_]{8,20}$";
 
         /// <summary>
         /// Validates the email address.
@@ -33,9 +35,11 @@ namespace RouteManagementTutorial.Helper
             return true;
         }
 
-        public static bool PasswordValidation(string password)
+        public static bool PasswordValidation(string password, string userType)
         {
-            if (string.IsNullOrEmpty(password) || !Regex.IsMatch(password, PasswordPattern))
+            string passwordPattern = userType == "admin"? AdminPasswordPattern: DriverPasswordPattern;
+
+            if (string.IsNullOrEmpty(password) || !Regex.IsMatch(password, passwordPattern))
             {
                 return false;
             }

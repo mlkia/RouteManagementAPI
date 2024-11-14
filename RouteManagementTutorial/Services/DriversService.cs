@@ -53,69 +53,77 @@ namespace RouteManagementTutorial.Services
         /// Creates a new driver and validates their email and phone number.
         /// </summary>
         /// <param name="newDriver">The driver object to create.</param>
-        /// <returns>A <see cref="CreateDriverResult"/> object containing the result of the creation operation.</returns>
-        public async Task<CreateDriverResult> CreateAsync(Driver newDriver)
+        /// <returns>A <see cref="CreateResult"/> object containing the result of the creation operation.</returns>
+        public async Task<CreateResult> CreateAsync(Driver newDriver)
         {
             newDriver.Id = "";
 
             newDriver.Email = newDriver.Email.ToLower();
 
-            var driverResult = new CreateDriverResult();
+            var newDriverResult = new CreateResult();
 
             // Validate the email address
-            var emailValidation = DriverHelper.EmailValidation(newDriver.Email);
+            var emailValidation = ValidationHelper.EmailValidation(newDriver.Email);
 
             if (emailValidation)
             {
-                driverResult.EmailValid = true;
+                newDriverResult.EmailValid = true;
             }
 
             // Check if the email address is available
             var emailAvailable = await GetByEmail(newDriver.Email);
 
             // If emailAvailable is null, driverResult.EmailAvailable is true, otherwise false.
-            driverResult.EmailAvailable = emailAvailable == null; 
+            newDriverResult.EmailAvailable = emailAvailable == null;
 
-            
+            // Validate the password
+            var passwordValidation = ValidationHelper.PasswordValidation(newDriver.Password, "driver");
+
+            if (passwordValidation)
+            {
+                newDriverResult.PasswordValid = true;
+            }
 
             // Validate the phone number
-            var phoneNumberValidation = DriverHelper.PhoneNumberValidation(newDriver.PhoneNumber);
+            var phoneNumberValidation = ValidationHelper.PhoneNumberValidation(newDriver.PhoneNumber);
 
             if (phoneNumberValidation)
             {
-                driverResult.PhoneNumberValid = true;
+                newDriverResult.PhoneNumberValid = true;
             }
 
-            // Validate the password
-            var passwordValidation = DriverHelper.PasswordValidation(newDriver.Password);
 
-            if (passwordValidation) 
-            {
-                driverResult.PasswordValid = true;
-            }
+            //Check The first name, last name and the license type != null or empty.
+            newDriverResult.FirstName = !string.IsNullOrEmpty(newDriver.FirstName.Trim());
+            newDriverResult.LastName = !string.IsNullOrEmpty(newDriver.LastName.Trim());
+            newDriverResult.LicenseType = !string.IsNullOrEmpty(newDriver.LicenseType.Trim());
 
 
             // Check if all validations passed and if the email is available
             if (
-                driverResult.EmailValid && 
-                driverResult.EmailAvailable && 
-                driverResult.PhoneNumberValid &&
-                driverResult.PasswordValid
+                newDriverResult.EmailValid &&
+                newDriverResult.EmailAvailable &&
+                newDriverResult.PhoneNumberValid &&
+                newDriverResult.PasswordValid &&
+                newDriverResult.FirstName &&
+                newDriverResult.LastName &&
+                newDriverResult.LicenseType
+                
             ) 
             {
                 // Insert the new driver into the collection
                 await _driversCollection.InsertOneAsync(newDriver);
-                driverResult.Success = true;
+                newDriverResult.Success = true;
             }
 
 
             // Return the result of the creation operation
-            return driverResult;
-        }
+            return newDriverResult;
+        } 
 
-        public string? Authenticate(string email, string personNumber, string role)
+        public string? Authenticate(string email, string password, string role)
         {
-            var driver = _driversCollection.Find(x => x.Email == email && x.PersonNumber == personNumber).FirstOrDefault();
+            var driver = _driversCollection.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
 
             if (driver is null)
             {

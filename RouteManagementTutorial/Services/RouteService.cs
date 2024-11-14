@@ -38,7 +38,7 @@ namespace RouteManagementTutorial.Services
                 return new CreateRouteResult { Success = false, Message= "Driver Not Found" }; 
             }
 
-            newRoute.DriverName = driver.Name;
+            newRoute.DriverName = driver.FirstName;
 
             await _routesCollection.InsertOneAsync(newRoute);
 
