@@ -55,9 +55,9 @@ namespace RouteManagementTutorial.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserAuthenticate driver)
+        public async Task<IActionResult> Login([FromBody] UserAuthenticate driver)
         {
-            var token = _driversService.Authenticate(driver.Email, driver.Password, "Driver");
+            var token = await _driversService.AuthenticateAsync(driver.Email, driver.Password, "Driver");
 
             if (token == null)
             {

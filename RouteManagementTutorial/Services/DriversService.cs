@@ -7,6 +7,7 @@ using RouteManagementTutorial.DTO;
 using RouteManagementTutorial.Authenticate;
 
 
+
 namespace RouteManagementTutorial.Services
 {
     public class DriversService
@@ -82,6 +83,7 @@ namespace RouteManagementTutorial.Services
             if (passwordValidation)
             {
                 newDriverResult.PasswordValid = true;
+                newDriver.Password = BCrypt.Net.BCrypt.HashPassword(newDriver.Password);
             }
 
             // Validate the phone number
@@ -121,18 +123,19 @@ namespace RouteManagementTutorial.Services
             return newDriverResult;
         } 
 
-        public string? Authenticate(string email, string password, string role)
+        public async Task<string?> AuthenticateAsync(string email, string password, string role)
         {
-            var driver = _driversCollection.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
+            
+            var driver = await _driversCollection.Find(x => x.Email == email).FirstOrDefaultAsync();
 
-            if (driver is null)
+            if (driver is null || !BCrypt.Net.BCrypt.Verify(password, driver.Password))
             {
                 return null;
             }
 
-            var newAuuhentication = _createAuthentication;
+            var newAuthentication = _createAuthentication;
 
-            return newAuuhentication.CreateNewAuthen(email, role);
+            return newAuthentication.CreateNewAuthen(email, role);
 
         }
 
