@@ -97,7 +97,7 @@ var app = builder.Build();
 /// This is essential for enabling communication between the React frontend and the ASP.NET Web API backend running on different ports.
 /// Remove this before production.
 /// </summary>
-app.UseCors(c => c.AllowAnyHeader().WithOrigins("http://localhost:5173").AllowAnyMethod());
+app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 
 // Configure the HTTP request pipeline.
