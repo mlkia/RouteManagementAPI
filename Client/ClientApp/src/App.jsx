@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, NavLink, Routes, Route, Navigate } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Drivers from './Components/Drivers'
 import './App.css'
-import Login from './Components/Login'
+import Login from './Components/Login/Login'
+import DriverProfile from './Components/DriverProfile/DriverProfile'
+import SignUpView from './Components/SignUp/SignUpView'
 
 function App() {
   
@@ -14,6 +13,8 @@ function App() {
     <div>
       <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<SignUpView />} />
+      <Route path="/profile" element={<DriverProfile />} />
       </Routes>
     </div>
     </Router>
