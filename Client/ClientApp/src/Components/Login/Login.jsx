@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import "./LoginStyle.css";
 
 function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [driverProfile, setDriverProfile] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
@@ -32,24 +34,8 @@ function Login(){
              // Store the token in localStorage
              localStorage.setItem('token', data.token);
 
-             console.log('Logged in successfully');
              // Redirect user to another page or update state
-
-             const token = localStorage.getItem('token');
-
-             const driverResponse = await fetch('https://localhost:7116/api/Drivers/Profile', {
-                method: 'GET',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              
-              const DriverData = await driverResponse.json();
-
-              setDriverProfile(DriverData)
-
-              console.log(DriverData);
+             navigate('/profile');
 
         }   catch(error){
             setError(error.message);
@@ -57,7 +43,8 @@ function Login(){
     };
 
     return (
-<div>
+<div className="login-container">
+  <div className="login-box">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -78,8 +65,13 @@ function Login(){
         <br />
         <button type="submit">Login</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
+      <p>Don't have an account?</p>
+      <button className="create-account-btn" onClick={() => navigate('/signup')}>
+        Create New Account
+      </button>
     </div>
+</div>
     );
 }
 
